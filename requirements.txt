@@ -1,0 +1,8 @@
+Django>=5.2.6
+django-htmx>=1.26.0
+django-tailwind[reload]>=3.0.1
+
+#Database
+psycopg2==2.9.10
+pillow>=11.3.0
+cookiecutter>=2.0.0
