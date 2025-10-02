@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Upload Teachers - School Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Bulk Upload Teachers</h1>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Upload multiple teachers at once using Excel or CSV file</p>
+        </div>
+        <a 
+            href="{% url 'teachers:list' %}"
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+            </svg>
+            Back to List
+        </a>
+    </div>
+
+    <!-- Instructions -->
+    <div class="rounded-lg border border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-900/20">
+        <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Instructions</h2>
+        <ol class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <li class="flex gap-2">
+                <span class="font-semibold">1.</span>
+                <span>Download the sample template below to see the required format</span>
+            </li>
+            <li class="flex gap-2">
+                <span class="font-semibold">2.</span>
+                <span>Fill in the teacher information following the template structure</span>
+            </li>
+            <li class="flex gap-2">
+                <span class="font-semibold">3.</span>
+                <span>Ensure all required fields are filled: first_name, last_name, gender, date_of_birth, email, phone, qualification, specialization, employment_status, hire_date</span>
+            </li>
+            <li class="flex gap-2">
+                <span class="font-semibold">4.</span>
+                <span>Use date format: YYYY-MM-DD (e.g., 1985-05-15)</span>
+            </li>
+            <li class="flex gap-2">
+                <span class="font-semibold">5.</span>
+                <span>Upload your completed file below</span>
+            </li>
+        </ol>
+        
+        <div class="mt-6">
+            <a 
+                href="{% url 'teachers:download_template' %}"
+                class="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                Download Sample Template
+            </a>
+        </div>
+    </div>
+
+    <!-- Upload Form -->
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 class="mb-6 text-lg font-semibold text-gray-900 dark:text-white">Upload File</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Select File <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.file }}
+                    {% if form.file.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.file.errors.0 }}</p>
+                    {% else %}
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ form.file.help_text }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700">
+                    <div class="flex items-start">
+                        {{ form.create_user_accounts }}
+                        <label class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                            <span class="font-medium">{{ form.create_user_accounts.label }}</span>
+                            <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">{{ form.create_user_accounts.help_text }}</p>
+                        </label>
+                    </div>
+
+                    <div class="flex items-start">
+                        {{ form.send_credentials_email }}
+                        <label class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                            <span class="font-medium">{{ form.send_credentials_email.label }}</span>
+                            <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">{{ form.send_credentials_email.help_text }}</p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end gap-4">
+            <a 
+                href="{% url 'teachers:list' %}"
+                class="cursor-pointer rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+                Cancel
+            </a>
+            <button 
+                type="submit"
+                class="cursor-pointer rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+            >
+                Upload Teachers
+            </button>
+        </div>
+    </form>
+
+    <!-- Supported Formats -->
+    <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+        <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Supported Formats</h3>
+        <div class="space-y-3">
+            <div class="flex items-center gap-3">
+                <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-sm text-gray-700 dark:text-gray-300">Excel (.xlsx)</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-sm text-gray-700 dark:text-gray-300">CSV (.csv)</span>
+            </div>
+        </div>
+        <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Maximum file size: 5MB</p>
+    </div>
+</div>
+{% endblock %}

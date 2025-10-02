@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ teacher.get_full_name }} - School Management{% endblock %}
+
+{% block content %}
+<div id="teacher-detail-container">
+    {% include 'teachers/teacher_detail_content.html' %}
+</div>
+{% endblock %}

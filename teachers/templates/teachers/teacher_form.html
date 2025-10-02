@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - School Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ title }}</h1>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                {% if teacher %}
+                    Update teacher information
+                {% else %}
+                    Add a new teacher to your school
+                {% endif %}
+            </p>
+        </div>
+        <a 
+            href="{% url 'teachers:list' %}"
+            class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+            </svg>
+            Back to List
+        </a>
+    </div>
+
+    <!-- Form -->
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Personal Information Section -->
+        <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 class="mb-6 text-lg font-semibold text-gray-900 dark:text-white">Personal Information</h2>
+            
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        First Name <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.first_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Middle Name
+                    </label>
+                    {{ form.middle_name }}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Last Name <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.last_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Gender <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.gender }}
+                    {% if form.gender.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.gender.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Date of Birth <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.date_of_birth }}
+                    {% if form.date_of_birth.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.date_of_birth.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Ghana Card Number
+                    </label>
+                    {{ form.ghana_card_number }}
+                    {% if form.ghana_card_number.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.ghana_card_number.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 class="mb-6 text-lg font-semibold text-gray-900 dark:text-white">Contact Information</h2>
+            
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Email <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Phone
+                    </label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.phone.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Address
+                    </label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.address.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Employment Details Section -->
+        <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 class="mb-6 text-lg font-semibold text-gray-900 dark:text-white">Employment Details</h2>
+            
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Qualification <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.qualification }}
+                    {% if form.qualification.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.qualification.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Specialization <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.specialization }}
+                    {% if form.specialization.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.specialization.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Employment Status <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.employment_status }}
+                    {% if form.employment_status.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.employment_status.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Hire Date <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.hire_date }}
+                    {% if form.hire_date.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.hire_date.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Additional Information Section -->
+        <div class="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 class="mb-6 text-lg font-semibold text-gray-900 dark:text-white">Additional Information</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Bio / Description
+                    </label>
+                    {{ form.bio }}
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Profile Picture
+                    </label>
+                    {{ form.profile_picture }}
+                </div>
+
+                <div class="flex items-center">
+                    {{ form.is_active }}
+                    <label class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Active Status
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Account Section (Only for new teachers) -->
+        {% if not teacher %}
+        <div class="rounded-lg border border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-900/20">
+            <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">User Account Creation</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    {{ form.create_user_account }}
+                    <label class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                        <span class="font-medium">{{ form.create_user_account.label }}</span>
+                        <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">{{ form.create_user_account.help_text }}</p>
+                    </label>
+                </div>
+
+                <div class="flex items-start">
+                    {{ form.send_credentials_email }}
+                    <label class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                        <span class="font-medium">{{ form.send_credentials_email.label }}</span>
+                        <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">{{ form.send_credentials_email.help_text }}</p>
+                    </label>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Form Actions -->
+        <div class="flex justify-end gap-4">
+            <a 
+                href="{% url 'teachers:list' %}"
+                class="cursor-pointer rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+                Cancel
+            </a>
+            <button 
+                type="submit"
+                class="cursor-pointer rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+            >
+                {% if teacher %}Update Teacher{% else %}Create Teacher{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

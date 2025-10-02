@@ -1,0 +1,238 @@
+<div class="p-6">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ action }} Teacher
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {% if action == 'Create' %}Add a new teacher to the system{% else %}Update teacher information{% endif %}
+            </p>
+        </div>
+        <button onclick="closeModal()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 smooth-transition">
+            <i class="fas fa-times text-xl text-gray-600 dark:text-gray-300"></i>
+        </button>
+    </div>
+    
+    <!-- Form -->
+    <form method="post" 
+          {% if action == 'Create' %}
+          hx-post="{% url 'teachers:teacher_create' %}"
+          {% else %}
+          hx-post="{% url 'teachers:teacher_update' teacher.pk %}"
+          {% endif %}
+          hx-target="#modal-content"
+          class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Personal Information Section -->
+        <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-user mr-2 text-blue-600"></i>
+                Personal Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        First Name <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.first_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Middle Name
+                    </label>
+                    {{ form.middle_name }}
+                    {% if form.middle_name.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.middle_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Last Name <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.last_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Gender <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.gender }}
+                    {% if form.gender.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.gender.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Date of Birth <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.date_of_birth }}
+                    {% if form.date_of_birth.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.date_of_birth.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Information Section -->
+        <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-address-book mr-2 text-purple-600"></i>
+                Contact Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Email <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Phone <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.phone.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Address
+                </label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.address.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Ghana Card Number
+                </label>
+                {{ form.ghana_card_number }}
+                {% if form.ghana_card_number.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.ghana_card_number.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Employment Information Section -->
+        <div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-briefcase mr-2 text-green-600"></i>
+                Employment Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Employee ID <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.employee_id }}
+                    {% if form.employee_id.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.employee_id.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Hire Date <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.hire_date }}
+                    {% if form.hire_date.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.hire_date.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Qualification <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.qualification }}
+                    {% if form.qualification.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.qualification.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Specialization <span class="text-red-500">*</span>
+                </label>
+                {{ form.specialization }}
+                {% if form.specialization.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.specialization.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- User Account Section -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-user-lock mr-2 text-blue-600"></i>
+                User Account
+            </h3>
+            <div class="flex items-start space-x-3">
+                {{ form.create_user_account }}
+                <div class="flex-1">
+                    <label for="{{ form.create_user_account.id_for_label }}" class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                        Create User Account
+                    </label>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {% if action == 'Create' %}
+                        Allow this teacher to login to the system. A password will be generated and displayed after creation.
+                        {% else %}
+                        {% if teacher.user %}
+                        This teacher already has a user account.
+                        {% else %}
+                        Create a login account for this teacher. A password will be generated and displayed.
+                        {% endif %}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status Section -->
+        <div>
+            <label class="flex items-center space-x-3">
+                {{ form.is_active }}
+                <span class="text-sm font-medium text-gray-900 dark:text-white">Active Status</span>
+            </label>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 ml-7">
+                Inactive teachers cannot login to the system
+            </p>
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button type="button" 
+                    onclick="closeModal()" 
+                    class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 smooth-transition">
+                Cancel
+            </button>
+            <button type="submit" 
+                    class="px-6 py-3 gradient-bg-light text-white rounded-lg font-semibold hover:opacity-90 smooth-transition">
+                <i class="fas fa-save mr-2"></i>{{ action }} Teacher
+            </button>
+        </div>
+    </form>
+</div>

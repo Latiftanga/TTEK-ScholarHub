@@ -1,165 +1,105 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}TTEK ScholarHub{% endblock %}</title>
-    
+    <title>{% block title %}School Management{% endblock %}</title>
     {% tailwind_css %}
     
-    <!-- HTMX -->
+    <!-- Prevent dark mode flash -->
+    <script>
+        // Check dark mode preference before page renders
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
-    <!-- Alpine.js for enhanced interactivity -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <!-- Custom styles -->
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        [x-cloak] { display: none !important; }
+        
+        /* Smooth transitions for dark mode - ONLY on body and containers */
+        body, 
+        body > div,
+        aside,
+        header,
+        main,
+        .rounded-lg,
+        .border {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
         
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Prevent transition on page load */
+        .preload,
+        .preload * {
+            transition: none !important;
         }
         
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+        /* HTMX loading indicator */
+        .htmx-indicator {
+            display: none;
+            z-index: 9999;
+        }
+        .htmx-request .htmx-indicator {
+            display: block;
+        }
+        .htmx-request.htmx-indicator {
+            display: block;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        /* Smooth content swap */
+        #main-content {
+            transition: opacity 0.2s ease;
         }
-        
-        .animate-pulse-slow {
-            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .htmx-swapping #main-content {
+            opacity: 0.5;
         }
     </style>
-    
-    {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 dark:bg-gray-900">
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/20 dark:bg-gray-900/80 dark:border-gray-700/20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="{% url 'core:home' %}" class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">D</span>
-                        </div>
-                        <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                            Django Stack
-                        </span>
-                    </a>
-                </div>
-                
-                <!-- Navigation Links -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="{% url 'core:home' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">
-                        Home
-                    </a>
-                    <a href="#features" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">
-                        Features
-                    </a>
-                    <a href="{% url 'core:htmx_demo' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">
-                        HTMX Demo
-                    </a>
-                    <a href="/admin/" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition">
-                        Admin
-                    </a>
-                </div>
-                
-                <!-- Mobile menu button -->
-                <div class="md:hidden" x-data="{ open: false }">
-                    <button @click="open = !open" class="text-gray-700 hover:text-blue-600 p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            <path x-show="open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                    
-                    <!-- Mobile menu -->
-                    <div x-show="open" x-transition class="absolute top-16 right-4 bg-white rounded-lg shadow-lg p-4 space-y-2 min-w-[200px]">
-                        <a href="{% url 'core:home' %}" class="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="#features" class="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Features</a>
-                        <a href="{% url 'core:htmx_demo' %}" class="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">HTMX Demo</a>
-                        <a href="/admin/" class="block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-md text-sm font-medium text-center">Admin</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+<body 
+    x-data="{ darkMode: false, sidebarToggle: false }"
+    x-init="
+        darkMode = localStorage.getItem('darkMode') === 'true';
+        $watch('darkMode', value => localStorage.setItem('darkMode', value));
+        setTimeout(() => document.body.classList.remove('preload'), 100);
+    "
+    :class="{'dark': darkMode}"
+    class="preload bg-white dark:bg-gray-900"
+>
+    <div class="flex h-screen overflow-hidden">
+        {% include 'partials/sidebar.html' %}
+        
+        <div class="relative flex flex-1 flex-col overflow-y-auto">
+            <!-- Mobile Overlay -->
+            <div 
+                x-show="sidebarToggle" 
+                @click="sidebarToggle = false"
+                x-transition
+                class="fixed inset-0 z-40 bg-black/50 lg:hidden"
+                x-cloak
+            ></div>
 
-    <!-- Main Content -->
-    <main class="pt-16">
-        <!-- Messages -->
-        {% if messages %}
-            <div class="fixed top-20 right-4 z-40 space-y-2">
-                {% for message in messages %}
-                    <div class="bg-white border-l-4 border-blue-500 p-4 shadow-lg rounded-lg max-w-sm" x-data="{ show: true }" x-show="show" x-transition>
-                        <div class="flex items-center justify-between">
-                            <p class="text-gray-700">{{ message }}</p>
-                            <button @click="show = false" class="text-gray-400 hover:text-gray-600">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 py-12">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">D</span>
-                        </div>
-                        <span class="text-xl font-bold">Django Stack</span>
-                    </div>
-                    <p class="text-gray-400">Modern web development with Django, HTMX, and TailwindCSS.</p>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Technologies</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>Django 5.0+</li>
-                        <li>HTMX</li>
-                        <li>TailwindCSS</li>
-                        <li>PostgreSQL</li>
-                        <li>Docker</li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Links</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="/admin/" class="hover:text-white transition">Admin Panel</a></li>
-                        <li><a href="#features" class="hover:text-white transition">Features</a></li>
-                        <li><a href="{% url 'core:htmx_demo' %}" class="hover:text-white transition">HTMX Demo</a></li>
-                    </ul>
-                </div>
-            </div>
+            {% include 'partials/header.html' %}
             
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {% now "Y" %} Django HTMX TailwindCSS Project. Built with ❤️</p>
-            </div>
+            <main class="relative flex-1 p-6">
+                <!-- Loading Indicator -->
+                <div id="loading-indicator" class="htmx-indicator absolute inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-gray-900/80">
+                    <div class="flex flex-col items-center gap-3">
+                        <svg class="h-12 w-12 animate-spin text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Loading...</span>
+                    </div>
+                </div>
+                
+                <div id="main-content">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
         </div>
-    </footer>
-
-    {% block extra_scripts %}{% endblock %}
+    </div>
 </body>
 </html>

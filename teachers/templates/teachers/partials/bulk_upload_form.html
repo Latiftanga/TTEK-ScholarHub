@@ -1,0 +1,87 @@
+<div class="p-6">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-file-upload mr-2 text-purple-600"></i>Bulk Upload Teachers
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Upload multiple teachers at once using Excel or CSV file
+            </p>
+        </div>
+        <button onclick="closeModal()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 smooth-transition">
+            <i class="fas fa-times text-xl text-gray-600 dark:text-gray-300"></i>
+        </button>
+    </div>
+    
+    <!-- Instructions -->
+    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 mb-6">
+        <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-400 mb-3 flex items-center">
+            <i class="fas fa-info-circle mr-2"></i>Instructions
+        </h3>
+        <ol class="text-sm text-blue-800 dark:text-blue-300 space-y-2 ml-4 list-decimal">
+            <li>Download the template file below</li>
+            <li>Fill in teacher information (do not change column headers)</li>
+            <li>Save and upload the file</li>
+            <li>Review the preview before confirming</li>
+        </ol>
+    </div>
+    
+    <!-- Download Template Button -->
+    <div class="mb-6">
+        <a href="{% url 'teachers:download_template' %}" 
+           class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold smooth-transition">
+            <i class="fas fa-download mr-2"></i>Download Template File
+        </a>
+    </div>
+    
+    <!-- Upload Form -->
+    <form method="post" 
+          enctype="multipart/form-data"
+          hx-post="{% url 'teachers:bulk_upload' %}"
+          hx-target="#modal-content"
+          hx-encoding="multipart/form-data"
+          class="space-y-6">
+        {% csrf_token %}
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Upload File <span class="text-red-500">*</span>
+            </label>
+            {{ form.file }}
+            {% if form.file.errors %}
+            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.file.errors.0 }}</p>
+            {% else %}
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Accepted formats: .xlsx, .xls, .csv (Max size: 5MB)
+            </p>
+            {% endif %}
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+            <div class="flex items-start space-x-3">
+                {{ form.create_user_accounts }}
+                <div class="flex-1">
+                    <label for="{{ form.create_user_accounts.id_for_label }}" class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                        Create user accounts for all teachers
+                    </label>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        Automatically create login accounts for all imported teachers. Passwords will be generated and displayed after upload.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button type="button" 
+                    onclick="closeModal()" 
+                    class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 smooth-transition">
+                Cancel
+            </button>
+            <button type="submit" 
+                    class="px-6 py-3 gradient-bg-light text-white rounded-lg font-semibold hover:opacity-90 smooth-transition">
+                <i class="fas fa-upload mr-2"></i>Upload & Preview
+            </button>
+        </div>
+    </form>
+</div>
