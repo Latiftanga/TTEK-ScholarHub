@@ -2,9 +2,18 @@ Django>=5.2.6
 django-htmx>=1.26.0
 django-tailwind[reload]>=3.0.1
 
-#Database
+# Database
 psycopg2==2.9.10
+django-tenants==3.9.0
 pillow>=11.3.0
 cookiecutter>=2.0.0
 pandas>=2.3.2
 openpyxl>=3.1.5
+python-dateutil>=2.8.2
+django-allauth==65.9.0
+django-cleanup>=9.0.0
+
+google-generativeai>=0.8.5
+python-dotenv>=1.2.1
+django-colorfield>=0.14.0
+django-storages>=1.14.6

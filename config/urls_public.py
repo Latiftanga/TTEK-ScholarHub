@@ -3,10 +3,13 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from users.views import profile_view
+from school_manager.admin import school_admin_site
 from home.views import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('dev/', school_admin_site.urls),
     path('accounts/', include('allauth.urls')),
     path('', include('home.urls')),
     path('profile/', include('users.urls')),
